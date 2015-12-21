@@ -1,0 +1,166 @@
+package network;
+
+import java.awt.GridLayout;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+/**
+ * <i>ShannonsSliderPanel</i> class implements Observer class and is used as a View component of MVC design pattern.
+ * Implements Observer, updates when change is made to model. 
+ * 
+ *
+ */
+@SuppressWarnings("serial")
+public class ShannonsSliderPanel extends JPanel implements Observer{
+	
+	/**
+	 * <i>BANDWIDTH_MAX</i> final attribute used to create high-end limit for <i>JSlider</i> and corresponding <i>bandwidth</i> 
+	 * attribute.
+	 */
+	private final int BANDWIDTH_MAX = 3000;
+	
+	/**
+	 * <i>BANDWIDTH_MAX</i> final attribute used to create low-end limit for <i>JSlider</i> and corresponding <i>bandwidth</i> 
+	 * attribute.
+	 */
+	private final int BANDWIDTH_MIN = 0;
+	
+	/**
+	 * <i>SIGNAL_TO_NOISE_MAX</i> final attribute used to create high-end limit for <i>JSlider</i> and corresponding <i>signalToNoise</i> 
+	 * attribute.
+	 */
+	private final int SIGNAL_TO_NOISE_MAX = 30;
+	
+	/**
+	 * <i>SIGNAL_TO_NOISE_MAX</i> final attribute used to create low-end limit for <i>JSlider</i> and corresponding <i>signalToNoise</i> 
+	 * attribute.
+	 */
+	private final int SIGNAL_TO_NOISE_MIN = 0;
+	
+	/**
+	 * <i>MAXIMUM_DATA_RATE_MAX</i> final attribute used to create high-end limit for <i>JSlider</i>.
+	 */
+	private final int MAXIMUM_DATA_RATE_MAX = 29901;
+	
+	/**
+	 * <i>MAXIMUM_DATA_RATE_MAX</i> final attribute used to create low-end limit for <i>JSlider</i>.
+	 */
+	private final int MAXIMUM_DATA_RATE_MIN = 0;
+	
+	/**
+	 * <i>ShannonsController</i> interface object used to alter and access model attributes without creating model object.
+	 */
+	private ShannonsController controller;
+	
+	/**
+	 * <i>maxDataSlider</i> object used to give user access to alter and view <i>maxDataRate</i> attribute of model.
+	 */
+	private JSlider maxDataRateJSlider = new JSlider(MAXIMUM_DATA_RATE_MIN, MAXIMUM_DATA_RATE_MAX,0);
+	
+	/**
+	 * <i>bandwidthJSlider</i> object used to give user access to alter and view <i>maxDataRate</i> attribute of model.
+	 * 
+	 */
+	private JSlider bandwidthJSlider = new JSlider(BANDWIDTH_MIN, BANDWIDTH_MAX,0);
+	
+	/**
+	 * <i>signalToNoiseJSlider</i> object used to give user access to alter and view <i>maxDataRate</i> attribute of model.
+	 */
+	private JSlider signalToNoiseJSlider = new JSlider(SIGNAL_TO_NOISE_MIN, SIGNAL_TO_NOISE_MAX,0);
+	
+	/**
+	 * 
+	 * <i>ShannonsSliderPanel</i>@param controller constructor. Used to instantiate controller object, as well as call 
+	 * <i>assembleUserInterface, and configureEvents</i> methods.
+	 */
+	public ShannonsSliderPanel(ShannonsController controller){
+		this.controller = controller;
+		assembleUserInterface();
+		configureEvents();
+	}
+	
+	/**
+	 * <i>Update</i> overridden method that adjusts JSlider components of View when event/change has occurred to model.
+	 *
+	 */
+	@Override
+	public void update(Observable o, Object arg){
+		if(o instanceof ShannonsModel){
+			ShannonsModel model = (ShannonsModel)o;
+			
+			if(model.getBandwidth()>BANDWIDTH_MAX)
+				model.setBandwidth(BANDWIDTH_MAX);
+			if(model.getSignalToNoise()>SIGNAL_TO_NOISE_MAX)
+				model.setSignalToNoise(SIGNAL_TO_NOISE_MAX);
+			
+			
+			bandwidthJSlider.setValue((int)Math.round(model.getBandwidth()));
+			signalToNoiseJSlider.setValue((int) Math.round(model.getSignalToNoise()));
+			maxDataRateJSlider.setValue((int) Math.round(model.getMaximumDataRate()));
+			
+		}
+	}
+	
+	/**
+	 * <i>assembleUserInterface</i> method called by constructor. Used to construct the JSlider and JTextFields within it.
+	 * 
+	 */
+	private void assembleUserInterface(){
+		maxDataRateJSlider.setEnabled(false);
+		
+		JPanel slidePanel = new JPanel(new GridLayout(3,2));
+		slidePanel.add(new JLabel("Bandwidth (herz)"));
+		slidePanel.add(bandwidthJSlider);
+		slidePanel.add(new JLabel("Signal to Noise (db)"));
+		slidePanel.add(signalToNoiseJSlider);
+		slidePanel.add(new JLabel("Maximum Data Rate (bps)"));
+		slidePanel.add(maxDataRateJSlider);
+	
+		this.setLayout(new GridLayout(1,1));
+		this.add(slidePanel);
+		this.setVisible(true);
+	}
+	
+	/**
+	 * <i>configureEvents</i> method used to simultaneously add create <i>ChangeListeners</i> classes to update changes through JSliders
+	 */
+	private void configureEvents(){
+		bandwidthJSlider.addChangeListener( new bandwidthListener());
+		signalToNoiseJSlider.addChangeListener(new signalToNoiseListener());
+	}
+	/**
+	 * 
+	 * <i>bandwidthListener</i> class implements ChangeListener, used to detect changes in the <i>bandwidthJSlider1</i>
+	 *
+	 */
+	public class bandwidthListener implements ChangeListener{
+		public void stateChanged(ChangeEvent e){
+			JSlider source = (JSlider)e.getSource();
+			if(source.getValueIsAdjusting()){
+				int bw = ((int)source.getValue());
+				controller.setBandwidth(bw);
+			}
+		}
+	}//end of bandwidthListener class
+	
+	/**
+	 * 
+	 * <i>signalToNoiseListener</i> class implements ChangeListener, used to detect changes in the <i>signalToNoiseJSlider1</i>
+	 *
+	 */
+	public class signalToNoiseListener implements ChangeListener{
+		public void stateChanged (ChangeEvent e){
+			JSlider source = (JSlider)e.getSource();
+			if(source.getValueIsAdjusting()){
+				int stn = ((int)source.getValue());
+				controller.setSignalToNoise(stn);
+			}
+		}
+	}//end of signalToNoiseListener class
+}
