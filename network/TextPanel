@@ -1,0 +1,127 @@
+package network;
+
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+/**
+ * <i>ShannonsTextPanel</i> class implements Observer class and is used as a View component of MVC design pattern.
+ * Implements Observer, updates when change is made to model. 
+ * 
+ *
+ */
+@SuppressWarnings("serial")
+public class ShannonsTextPanel extends JPanel implements Observer {
+	/**
+	 * <i>ShannonsController</i> interface object used to alter and access model attributes without creating model object.
+	 */
+	private ShannonsController controller;
+	
+	/**
+	 * <i>maxDataRateJTextField</i> object used to give user access to alter and view <i>maxDataRate</i> attribute of model.
+	 * 
+	 */
+	private JTextField maxDataRateJTextField = new JTextField();
+	
+	/**
+	 * <i>bandwidthTextField</i> object used to give user access to alter and view <i>bandwidth</i> attribute of model.
+	 */
+	private JTextField bandwidthJTextField = new JTextField();
+	
+	/**
+	 * <i>signalToNoiseJTextField</i> object used to give user access to alter and view <i>signalToNoise</i> attribute of model.
+	 */
+	private JTextField signalToNoiseJTextField = new JTextField();
+	
+	 
+	/**
+	 * 
+	 * <i>ShannonsTextPanel</i>@param controller constructor. Used to instantiate controller object, as well as call 
+	 * <i>assembleUserInterface, and configureEvents</i> methods.
+	 */
+	public ShannonsTextPanel(ShannonsController controller){
+		this.controller = controller;
+		assembleUserInterface();
+		configureEvents();
+	}
+	
+	/**
+	 * <i>Update</i> overridden method that adjusts JTextField components of View when event/change has occurred to model.
+	 *
+	 */
+	@Override
+	public void update(Observable o, Object arg){
+		if(o instanceof ShannonsModel){
+			ShannonsModel model = (ShannonsModel)o;
+			bandwidthJTextField.setText(Double.toString(model.getBandwidth()));
+			signalToNoiseJTextField.setText(Double.toString(model.getSignalToNoise()));
+			maxDataRateJTextField.setText(Double.toString(model.getMaximumDataRate()));
+		}
+	}
+	
+	/**
+	 * <i>assembleUserInterface</i> method called by constructor. Used to construct the JPanel and JTextFields within it.
+	 * 
+	 */
+	private void assembleUserInterface(){
+		maxDataRateJTextField.setEditable(false);
+		
+		JPanel bandwidthPanel = new JPanel(new GridLayout(1,2));
+		bandwidthPanel.add(new JLabel("Bandwidth (herz)"));
+		bandwidthPanel.add(bandwidthJTextField);
+		
+		JPanel signalNoisePanel = new JPanel(new GridLayout(1,2));
+		signalNoisePanel.add(new JLabel("Signal to Noise (db)"));
+		signalNoisePanel.add(signalToNoiseJTextField);
+		
+		JPanel maxDataRatePanel = new JPanel(new GridLayout(1,2));
+		maxDataRatePanel.add(new JLabel("Maximum Data Rate (bps)"));
+		maxDataRatePanel.add(maxDataRateJTextField);
+		
+		this.setLayout(new GridLayout(3,1));
+		this.add(bandwidthPanel);
+		this.add(signalNoisePanel);
+		this.add(maxDataRatePanel);
+		this.setVisible(true);
+
+	}
+	
+	/**
+	 * <i>configureEvents</i> method used to apply changes made on JTextFields by user via <i>Observers, and ActionListeners</i>.
+	 * JOptionPanes are used to alert user of incorrect/incompatible inputs
+	 */
+	private void configureEvents(){
+		bandwidthJTextField.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				double bw = 0; 
+				try{
+					bw = (Double.parseDouble(bandwidthJTextField.getText()));
+				}catch(NumberFormatException exception){
+					JOptionPane.showMessageDialog(ShannonsTextPanel.this, "Enter only numbers for bandwidth");
+				}
+				controller.setBandwidth(bw);
+			}
+		});
+			
+		signalToNoiseJTextField.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				double stn = 0;
+				try{
+					stn = (Double.parseDouble(signalToNoiseJTextField.getText()));
+				}catch(NumberFormatException excpetion){
+					JOptionPane.showMessageDialog(ShannonsTextPanel.this, "Enter only numbers for Signal/Noise Ratio");
+				}
+				controller.setSignalToNoise(stn);
+			}
+		});
+	}
+}
