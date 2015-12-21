@@ -1,0 +1,34 @@
+package network;
+
+import java.util.Observer;
+
+/**
+ * 
+ * <i>ShannonsController</i> interface that is implemented by <i>ShannonsTheorem</i> Class. Holds three interfaced methods: <i>addObserver, setBandwidth, and setSignalToNoise</i>
+ *
+ */
+public interface ShannonsController {
+	
+	/**
+	 * 
+	 * <i>addObserver</i>@param method that is a reference to the method with the same name in <i>ShannonsTheorem</i>. 
+	 * Adds an observer to the observable <i>ShannonsModel</i> class.
+	 */
+	public void addObserver(Observer observer);
+		
+	/**
+	 * 
+	 * <i>setBandwidth</i> @param bandwidth method that is a reference to the method with the same name in <i>ShannonsTheorem</i>. 
+	 * Setter method for <i>bandwidth</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public void setBandwidth(double bandwidth);
+		
+	/**
+	 * 
+	 * <i>setSignalToNoise</i>@param signalToNoise method that is a reference to the method with the same name in <i>ShannonsTheorem</i>. 
+	 * Setter method for <i>signalToNoise</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public void setSignalToNoise(double signalToNoise);
+		
+	
+}
