@@ -1,0 +1,134 @@
+/*
+ *  @(#)ShannonsTheorem.java   1.0 YY/MM/DD
+ *
+ *
+ *  This software contains confidential and proprietary information
+ *  of Dyer Consulting ("Confidential Information").  You shall not disclose
+ *  such Confidential Information and shall use it only in accordance with the
+ *  terms of the license agreement you entered into with Dyer Consulting.
+ *
+ *  This software is provided "AS IS,".  No warrantee of any kind, express
+ *  or implied, is included with this software; use at your own risk, responsibility
+ *  for damages (if any) to anyone resulting from the use of this software rests
+ *  entirely with the user even if Dyer Consulting has been advised of the
+ *  possibility of such damages.
+ *
+ *  This software is not designed or intended for use in on-line control of
+ *  aircraft, air traffic, aircraft navigation or aircraft communications; or in
+ *  the design, construction, operation or maintenance of any nuclear
+ *  facility. Licensee represents and warrants that it will not use or
+ *  redistribute the Software for such purposes.
+ *
+ *  Distribute freely, except: don't remove my name from the source or
+ *  documentation, mark your changes (don't blame me for your possible bugs),
+ *  don't alter or remove any of this notice.
+ */
+
+package network;													/*	Package for class placement	*/
+
+import java.util.Observer;
+
+
+
+/**
+ * This class contains two private attributes with corresponding getters and setters as well as a default constructor that instantiates the attributes to 0.0. The attributes are values <i>bandwidth</i> and <i>signalToNoise</i> which are used
+ * to calculate a "Capacity" value using a private method <i>getMaximumDataRate</i>. A second public <i>getMaximumDataRate</i> method is used to give access to the private one.
+ * A <i>toString</i> method is present that outputs the attributes values to the console in a meaningful way. Delegates methods to <i>ShannonsModel</i> as well as implements the 
+ * <i>ShannonsController</i> interface with methods, <i>addObserver, setBandwidth, and setSignalToNoise</i>. 
+ * @author    Alexander Jang 
+ * @version   3.0.0 [November 04, 2015]
+ */
+public class ShannonsTheorem implements ShannonsController{
+	
+	ShannonsModel model = new ShannonsModel();
+	/* CONSTRUCTOR	--------------------------------------------------	*/
+	/**
+	 *	Default constructor. Instantiates <i>bandwidth</i> and <i>signalToNoise</i> attributes to 0.0
+	 */
+	public ShannonsTheorem()	{	}
+
+	/* ACCESSORS	-----------------------------------------------------	*/
+	/**
+	 * Public <i>getMaximumDataRate</i>, calls ShannonsModel version of the same method using a ShannonsModel object.
+	 * 
+	 */
+	
+	/**
+	 * <i>addObserver</i> interfaced method that adds an observer to the observable <i>ShannonsModel</i> class.
+	 */
+	public void addObserver(Observer observer) {
+		model.addObserver(observer);
+	}
+	
+	public double getMaximumDataRate(){ return	model.getMaximumDataRate();		}
+	
+	/**
+	 * Getter method for <i>signalToNoise</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public double getSignalToNoise(){ return model.getSignalToNoise();	}
+	/**
+	 * Getter method for <i>bandwidth</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public double getBandwidth(){	return model.getBandwidth();	}
+
+	/* MODIFIERS	-----------------------------------------------------	*/
+	/**
+	 * Interfaced setter method for <i>bandwidth</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public void setBandwidth(double h){		model.setBandwidth(h);	}
+	
+	/**
+	 * Interfaced setter method for <i>signalToNoise</i> attribute of the ShannonsModel object in the ShannonsModel class.
+	 */
+	public void setSignalToNoise(double snr){		model.setSignalToNoise(snr);	}
+
+
+
+	/*	ENTRY POINT for STAND-ALONE OPERATION ---------------------------	*/
+	/**
+	 * the main method utilizes <i>JOptionPane</i> to prompt the user for values
+	 *for the attributes and calls the public <i>getMaximumDataRate</i> to calculate the "Capacity" value and outputs the value in a readable way, once again utilizing <i>JOptionPane</i>.
+	 *The "Capacity" value is formated into 2 decimal places using the imported <i>DecimalFormat</i> Java resource. Basic exception handling for when a non-double or integer value is inputed.
+	 */
+/*
+	public static void main (String args[]) {
+		ShannonsTheorem app = new ShannonsTheorem();
+		
+		String input;
+		double value;
+		DecimalFormat df = new DecimalFormat("#.##");
+
+		input = JOptionPane.showInputDialog("Please input a Bandwidth");
+		try{
+		value = Double.parseDouble(input);
+		}catch(NumberFormatException nfex){
+			JOptionPane.showMessageDialog(null, "Error: not a valid entry. Please enter a number");
+			input = JOptionPane.showInputDialog("Please input a Bandwidth"); 
+			value = Double.parseDouble(input);
+		}
+
+		app.setBandwidth(value);
+		input = JOptionPane.showInputDialog("Please input a Signal-to-Noise Ratio");
+		try{
+		value = Double.parseDouble(input);
+		}catch(NumberFormatException nfex){
+			JOptionPane.showMessageDialog(null, "Error: not a valid entry. Please enter a number");
+			input = JOptionPane.showInputDialog("Please input a Signal-to-Noise Ratio"); 
+			value = Double.parseDouble(input);
+		}
+		
+		app.setSignalToNoise(value);
+		value = app.getMaximumDataRate();
+		
+		JOptionPane.showMessageDialog(null,"The Max Data Rate is: " + df.format(value));
+
+		
+	}
+*/
+
+
+
+
+
+
+}	/*	End of CLASS:	ShannonsTheorem.java			*/
