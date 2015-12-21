@@ -1,0 +1,82 @@
+package network;
+
+import java.util.Observable;
+
+/**
+ *<i>ShannonsModel</i> class represents the Model for the MVC design pattern of program. Receives all instructions delegated by <i>ShannonsTheorem</i> Class
+ *Extends Observable.
+ *
+ *
+ */
+public class ShannonsModel extends Observable {
+
+	
+	/* ATTRIBUTES	-----------------------------------------------------	*/
+	/**
+	 *The <i>bandwidth</i> attribute is one of two values required to calculate "Capacity" in the <i>getMaximumDataRate</i> method. Private, can only be accessed outside of class by public getter and setter methods.
+	 */
+	private double bandwidth;
+	/**
+	 *The <i>signalToNoise</i> attribute is one of two values required to calculate "Capacity" in the <i>getMaximumDataRate</i> method. Private, can only be accessed outside of class by public getter and setter methods.
+	 */
+	private double signalToNoise;
+	
+	//CONSTRUCTOR
+	/**
+	 *	Default constructor. Instantiates <i>bandwidth</i> and <i>signalToNoise</i> attributes to 0.0
+	 */
+	public ShannonsModel(){
+		bandwidth = 0.0;
+		signalToNoise = 0.0;
+	}
+	/**
+	 *	Private <i>getMaximumDataRate</i>, typically should be only called by the public version of the same method. Calculates the "Capacity" value and returns it.
+	 */
+	private double getMaximumDataRate(double hertz, double signalToNoise){
+		double mdr;
+		mdr = (hertz*(Math.log(1+Math.pow(10,signalToNoise/10))/Math.log(2)));
+		return mdr;
+	}
+	/**
+	 * Public <i>getMaximumDataRate</i>, to give access of private version of method outside of class, called by ShannonsTheorem version of the same method. . 
+	 * 	 */
+	public double getMaximumDataRate(){ return	getMaximumDataRate(this.bandwidth, this.signalToNoise);		}
+	
+	/**
+	 * Getter method for <i>signalToNoise</i> attribute. 
+	 */
+	public double getSignalToNoise(){ return this.signalToNoise;	}
+	/**
+	 * Getter method for <i>bandwidth</i> attribute. 
+	 */
+	public double getBandwidth(){	return this.bandwidth;	}
+
+	/* MODIFIERS	-----------------------------------------------------	*/
+	/**
+	 * Setter method for <i>bandwidth</i> attribute. 
+	 */
+	public void setBandwidth(double h){
+		this.bandwidth = h;
+		this.setChanged();
+		this.notifyObservers();
+	}
+	/**
+	 * Setter method for <i>signalToNoise</i> attribute. 
+	 */
+	public void setSignalToNoise(double snr){
+		this.signalToNoise = snr;
+		this.setChanged();
+		this.notifyObservers();
+	}
+
+
+	/**
+	 *	Converts this class to a meaningful string. Returns the attribute values for any given object of this class.
+	 */
+	 public String toString()	{
+		 return	"["
+		 		+ "Bandwidth: " + getBandwidth()+"Hz\n"
+		 		+ "Signal to Noise Ratio: " + getSignalToNoise()
+		 		+ "]";
+	}
+}
