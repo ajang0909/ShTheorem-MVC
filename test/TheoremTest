@@ -1,0 +1,39 @@
+package networktest;
+import static org.junit.Assert.assertTrue;
+
+import java.text.DecimalFormat;
+
+import org.junit.Test;
+
+import network.*;
+
+public class ShannonsTheoremTest {
+	
+
+	/**
+	 * Creates ShannonTheorem Object, uses toString method to check initial values of attributes, uses setter methods for new values and asserts their values with getter methods prints values with toString again for reassurance values have changed.
+	 */
+	@Test
+	public void testGetSet()
+	{
+		ShannonsTheorem test = new ShannonsTheorem();
+		test.setBandwidth(10);
+		test.setSignalToNoise(10);
+		assertTrue(test.getBandwidth()==10);
+		assertTrue(test.getSignalToNoise()==10);
+	}
+	
+	
+	/**
+	 * Creates ShannonsTheorem Object and DecimalFormat Object (#.##), sets bandwidth and signalToNoise values to both 10, asserts true that the decimal formatted value of getMaximumDataRate method returns expected value of 34.59
+	 */
+	@Test
+	public void testBehavior()
+	{
+		ShannonsTheorem test = new ShannonsTheorem();
+		DecimalFormat df = new DecimalFormat("#.##");
+		test.setBandwidth(10);
+		test.setSignalToNoise(10);
+		assertTrue(Double.parseDouble(df.format(test.getMaximumDataRate()))==34.59);
+	}
+}
